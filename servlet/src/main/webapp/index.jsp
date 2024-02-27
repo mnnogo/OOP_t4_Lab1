@@ -5,16 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Форматирование текста</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-<h2>Выберите .txt файл для загрузки:</h2>
-<form action="Format" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".txt">
-    <input type="submit" value="Считать" id="read-file">
-</form>
-<label>
-    Содержимое файла: <br>
-    <textarea name="textContent" rows="10" cols="50" readonly></textarea>
-</label>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2>Выберите .txt файл для загрузки:</h2>
+            <form action="Format" method="POST" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="file" accept=".txt">
+                    <button class="btn btn-primary" type="submit">Обработать</button>
+                </div>
+            </form>
+            <label for="text-content">Результат:</label>
+            <textarea class="form-control" id="text-content" rows="10" readonly></textarea>
+            <a class="btn btn-success mt-3" id="download-btn">Скачать</a>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
