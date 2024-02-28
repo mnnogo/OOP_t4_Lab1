@@ -30,16 +30,52 @@ public class FormatServlet extends HttpServlet
 
         String result = getResultString(fileContentAsString);
 
-        // создать результат запроса
+        // создать страницу с результатом запроса
         fillHtmlCode(out, result);
 
         out.flush();
         out.close();
     }
 
-    private String getResultString(String fileContentAsString)
+    private String getResultString(String text)
     {
-        return fileContentAsString;
+        // абзацы
+        String[] paragraphs = text.split("\n");
+
+        StringBuilder formattedText = new StringBuilder();
+        for (String paragraph : paragraphs)
+        {
+            // добавление отступа в начало абзаца и убирание лищних пробелов
+            paragraph = "   " + paragraph.trim();
+
+            // ограничение длины строки до 80 символов
+            int lineLength = 0;
+            StringBuilder formattedParagraph = new StringBuilder();
+            for (int i = 0; i < paragraph.length(); i++)
+            {
+                char ch = paragraph.charAt(i);
+
+                if (lineLength == 80)
+                {
+                    formattedParagraph.append("\n");
+                    lineLength = 0;
+                }
+                else
+                {
+                    // первый символ не пробел, кроме абзацных пробелов
+                    if (!(lineLength == 0 && Character.isWhitespace(ch) && i > 2))
+                    {
+                        formattedParagraph.append(ch);
+                        lineLength++;
+                    }
+                }
+            }
+
+            // добавление отформатированного абзаца к итоговому тексту
+            formattedText.append(formattedParagraph).append("\n");
+        }
+
+        return formattedText.toString();
     }
 
     private void fillHtmlCode(PrintWriter out, String result)
@@ -51,21 +87,23 @@ public class FormatServlet extends HttpServlet
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
         out.println("<title>Форматирование текста</title>");
         out.println("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH\" crossorigin=\"anonymous\">");
+        out.println("<link rel=\"stylesheet\" href=\"style.css\">\n");
         out.println("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz\" crossorigin=\"anonymous\"></script>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<div class=\"container\">");
+        out.println("<br><br><br><br>");
+        out.println("<div class=\"container-fluid col-sm-6\" id=\"container\">");
         out.println("<div class=\"row justify-content-center\">");
-        out.println("<div class=\"col-md-8\">");
+        out.println("<div class=\"\">");
         out.println("<h2>Выберите .txt файл для загрузки:</h2>");
         out.println("<form action=\"Format\" method=\"POST\" enctype=\"multipart/form-data\">");
         out.println("<div class=\"input-group mb-3\">");
-        out.println("<input type=\"file\" class=\"form-control\" name=\"file\" accept=\".txt\">");
-        out.println("<button class=\"btn btn-primary\" type=\"submit\">Обработать</button>");
+        out.println("<input type=\"file\" class=\"form-control mt-2\" name=\"file\" accept=\".txt\">");
+        out.println("<button class=\"btn btn-primary mt-2\" type=\"submit\">Обработать</button>");
         out.println("</div>");
         out.println("</form>");
         out.println("<label for=\"text-content\">Результат:</label>");
-        out.println("<textarea class=\"form-control\" id=\"text-content\" rows=\"10\" readonly>");
+        out.println("<textarea class=\"form-control\" id=\"text-content\" rows=\"20\" readonly>");
         out.println(result);
         out.println("</textarea>");
         out.println("<a class=\"btn btn-success mt-3\" id=\"download-btn\">Скачать</a>");
